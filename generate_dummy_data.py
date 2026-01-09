@@ -3,22 +3,31 @@ import numpy as np
 
 
 def create_messy_dataset():
-    # Create a dictionary with intentional 'dirtiness'
-    data = {
-        'EmployeeID': [101, 102, 103, 104, 105, 106, 107, 108],
-        'Age': [25, 30, np.nan, 35, 100, 28, 45, np.nan],  # NaN and Outlier (100)
-        'Salary': [50000, 60000, 55000, np.nan, 200000, 58000, 62000, 59000],  # NaN and Outlier (200k)
-        'City': ['New York', 'Paris', 'New York', 'Paris', 'Berlin', 'Berlin', 'Tokyo', 'Tokyo'],
-        'Department': ['IT', 'HR', 'IT', 'Finance', 'IT', 'HR', 'Finance', 'IT']
+    # Set seed for reproducibility as requested in the text
+    np.random.seed(0)
+
+    # Generate the specific dummy data structure from the activity
+    # 100 normal rows + 2 outliers/missing = 102 rows total
+    feature1 = np.random.normal(100, 10, 100).tolist() + [np.nan, 200]
+    feature2 = np.random.randint(0, 100, 102).tolist()
+    # Pattern A,B,C,D repeated 25 times = 100, plus NaN and 'A' = 102
+    category = ['A', 'B', 'C', 'D'] * 25 + [np.nan, 'A']
+    target = np.random.choice([0, 1], 102).tolist()
+
+    dummy_data = {
+        'Feature1': feature1,
+        'Feature2': feature2,
+        'Category': category,
+        'Target': target
     }
 
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(dummy_data)
 
     # Save to CSV
     output_file = 'raw_data.csv'
     df.to_csv(output_file, index=False)
-    print(f"✅ Dummy data generated: {output_file}")
-    print(df)
+    print(f"✅ Dummy data generated matches Activity specs: {output_file}")
+    print(df.tail())  # Show the outliers at the end
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ if 'data_path' not in st.session_state:
 st.title("⚙️ AutoPrep Pipeline Dashboard")
 st.markdown("""
 **Automated Data Cleaning & Preprocessing Tool.**
-*Choose to upload your own CSV or generate a messy dummy dataset to test the pipeline.*
+*Matches 'Walkthrough: Data cleaning and preprocessing' specifications.*
 """)
 
 st.divider()
@@ -36,14 +36,22 @@ with st.sidebar:
         uploaded_file = None
 
     st.header("2. Pipeline Settings")
-    use_imputation = st.checkbox("Handle Missing Values", value=True)
-    use_outliers = st.checkbox("Remove Outliers (Z-Score)", value=True)
-    use_scaling = st.checkbox("Scale Features", value=True)
-    use_encoding = st.checkbox("Encode Categorical Vars", value=True)
+    use_imputation = st.checkbox("Handle Missing (Mean/Mode)", value=True)
+    use_outliers = st.checkbox("Remove Outliers (Z-Score < 3)", value=True)
+
+    # Updated: Selection for Scaling Method
+    scaler_type = st.radio(
+        "Scaling Method",
+        ["StandardScaler (Z-Score)", "MinMax Scaler (0-1)"],
+        index=0,
+        help="StandardScaler is required for the Walkthrough activity."
+    )
+
+    use_encoding = st.checkbox("Encode Categories (One-Hot)", value=True)
 
     # --- VERSION INDICATOR ---
     st.markdown("---")
-    st.caption("v1.0.0 | AutoPrep Pipeline")
+    st.caption("v1.1.0 | AutoPrep Pipeline")
 
 # --- Logic: Determine which file to use ---
 active_path = None
@@ -70,22 +78,22 @@ if active_path and os.path.exists(active_path):
     with col1:
         st.info(f"Rows: {pipeline.df.shape[0]}\nColumns: {pipeline.df.shape[1]}")
     with col2:
-        # Full table visibility (scrollable)
         st.dataframe(pipeline.df, height=300)
 
         # 3. The Action Button
     st.write("")
     if st.button("🚀 Run Preprocessing Pipeline", type="primary"):
 
-        with st.spinner("Cleaning data..."):
+        with st.spinner("Processing..."):
             if use_imputation:
                 pipeline.handle_missing_values(strategy='fill_mean')
 
             if use_outliers:
                 pipeline.handle_outliers()
 
-            if use_scaling:
-                pipeline.scale_data(method='minmax')
+            # Updated Scaling Logic
+            method = 'standard' if "StandardScaler" in scaler_type else 'minmax'
+            pipeline.scale_data(method=method)
 
             if use_encoding:
                 pipeline.encode_categorical()
@@ -99,19 +107,19 @@ if active_path and os.path.exists(active_path):
             st.success(f"Rows: {pipeline.df.shape[0]}\nColumns: {pipeline.df.shape[1]}")
             st.write("**Verification:**")
             st.text(f"Missing Values: {pipeline.df.isnull().sum().sum()}")
+            st.text(f"Columns: {list(pipeline.df.columns)}")
         with col4:
-            # Full table visibility (scrollable)
             st.dataframe(pipeline.df, height=300)
 
         # 5. Download Button
-        output_file = "processed_data.csv"
+        output_file = "preprocessed_dummy_data.csv"
         pipeline.save_data(output_file)
 
         with open(output_file, "rb") as file:
             st.download_button(
                 label="📥 Download Cleaned CSV",
                 data=file,
-                file_name="cleaned_master_data.csv",
+                file_name="preprocessed_dummy_data.csv",
                 mime="text/csv"
             )
 

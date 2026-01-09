@@ -8,16 +8,17 @@
 This project demonstrates core competencies in:
 - **Data Engineering:** Automated ingestion and handling of missing values.
 - **Full-Stack Data Science:** Building user interfaces for data workflows.
-- **Statistical Analysis:** Z-score outlier detection and distribution scaling.
+- **Statistical Analysis:** Z-score outlier detection and Standard distribution scaling.
 - **Machine Learning Prep:** One-Hot Encoding for categorical feature transformation.
 
 ## ✨ Features
 - **📊 Interactive Dashboard:** A user-friendly web interface to upload, clean, and download data instantly.
 - **⚡ Automated Ingestion:** Loads CSV datasets seamlessly using Pandas.
-- **🧹 Smart Cleaning:** Detects and handles missing values (imputation or removal).
-- **📉 Outlier Detection:** Implements Z-score analysis to identify and remove statistical outliers.
-- **📏 Normalization:** Supports Min-Max scaling to standardise features.
-- **🔢 Encoding:** Converts categorical variables using One-Hot Encoding.
+- **🧹 Smart Cleaning:** - Fills numeric missing values with the **Mean**.
+  - Fills categorical missing values with the **Mode** (Most Frequent).
+- **📉 Outlier Detection:** Implements Z-score analysis (> 3 Sigma) to identify and remove outliers.
+- **📏 Normalization:** Uses **StandardScaler** (Z-score normalization) to scale features to Mean=0, Std=1.
+- **🔢 Encoding:** Converts categorical variables using One-Hot Encoding (retaining all categories).
 
 ## 📂 Project Structure
 ```text
@@ -39,6 +40,7 @@ AutoPrep-Pipeline/
 
 ## 📋 Prerequisites
 Ensure you have Python 3.x installed. The project relies on the following libraries:
+- 'streamlit' (Web Dashboard)
 - `pandas` (Data Manipulation)
 - `numpy` (Numerical Operations)
 - `scikit-learn` (Preprocessing)
