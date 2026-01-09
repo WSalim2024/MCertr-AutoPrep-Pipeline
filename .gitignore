@@ -1,0 +1,23 @@
+# --- PyCharm & IDE Settings ---
+.idea/
+.vscode/
+
+# --- Python Virtual Environment ---
+# This is critical. Never upload your libraries.
+.venv/
+venv/
+env/
+
+# --- Python Compiled Files ---
+__pycache__/
+*.py[cod]
+
+# --- Data Artifacts ---
+# We ignore CSVs because 'generate_dummy_data.py' creates them on the fly.
+# This keeps the repo lightweight.
+*.csv
+data/
+
+# --- OS System Files ---
+.DS_Store
+Thumbs.db
